@@ -23,6 +23,10 @@ variable "ami" {
   type        = string
 }
 
+variable "db_name" {
+  description = "The master DB name"
+  type        = string
+}
 
 variable "db_username" {
   description = "The master DB username"
@@ -33,4 +37,10 @@ variable "db_password" {
   description = "The master DB password"
   type        = string
   sensitive   = true
+}
+
+variable "rds_endpoint" {
+  description = "RDS endpoint"
+  type = string
+  default = ""
 }

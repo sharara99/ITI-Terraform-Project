@@ -25,16 +25,25 @@ output "public_instance_ips" {
 }
 
 # Create the inventory file
-resource "null_resource" "generate_asg_inventory" {
-  depends_on = [data.aws_instances.asg_instances]
+# resource "null_resource" "generate_asg_inventory" {
+#   depends_on = [data.aws_instances.asg_instances]
 
-  provisioner "local-exec" {
-    command = <<EOF
-      echo "[servers]" > ./inventory
-%{ for ip in data.aws_instances.asg_instances.public_ips ~}
-      echo "ec2-user ansible_host=${ip} ansible_user=ec2-user ansible_ssh_private_key_file=./mykey.pem" >> ./inventory
-%{ endfor ~}
-    EOF
-  }
+#   provisioner "local-exec" {
+#     command = <<EOF
+#       export ANSIBLE_HOST_KEY_CHECKING=False
+#       export ANSIBLE_SSH_ARGS='-o StrictHostKeyChecking=no'
+#       echo "[servers]" > ./inventory
+# %{ for i in range(length(data.aws_instances.instances.public_ips)) ~}
+#       echo "server${i + 1} ansible_host=${data.aws_instances.instances.public_ips[i]} ansible_user=ec2-user ansible_ssh_private_key_file=./mykey.pem" >> ./inventory
+# %{ endfor ~}
+#     EOF
+#   }
+# }
+
+
+output "rds_endpoint" {
+  description = "RDS endpoint"
+  value       = aws_db_instance.rds_master.endpoint
 }
+
 

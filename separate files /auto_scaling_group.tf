@@ -1,5 +1,6 @@
+# This file contains the configuration for the Auto Scaling Group and Launch Configuration. 
 resource "aws_launch_configuration" "app" {
-  name                        = "app-configuration"
+  name_prefix                 = "app-"
   image_id                    = var.ami
   instance_type               = var.instance_type
   key_name                    = aws_key_pair.UbuntuKP.key_name
@@ -9,14 +10,24 @@ resource "aws_launch_configuration" "app" {
   user_data = <<-EOF
     #!/bin/bash
     yum update -y
+    yum install -y httpd php git php-mysqlnd unzip awscli -y
+
+    git clone https://github.com/sharara99/My-To-Do-List.git /var/www/html
+
+    systemctl start httpd
+    systemctl enable httpd
+
+    sed -i 's/REPLACE_ME/${aws_db_instance.rds_master.endpoint}/' /var/www/html/db.php
   EOF
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
-
-# Create Auto Scaling Group (ASG)
 resource "aws_autoscaling_group" "app" {
   name                 = "ASG"
-  launch_configuration = aws_launch_configuration.app.id
+  launch_configuration = aws_launch_configuration.app.name
   min_size             = 1
   max_size             = 3
   desired_capacity     = 2
@@ -30,9 +41,8 @@ resource "aws_autoscaling_group" "app" {
   }
 }
 
-# Fetch the instance details based on Auto Scaling Group instances
 data "aws_instances" "asg_instances" {
-  depends_on = [aws_autoscaling_group.app] # Ensures instances are launched before fetching
+  depends_on = [aws_autoscaling_group.app]
 
   filter {
     name   = "instance-state-name"
@@ -44,3 +54,4 @@ data "aws_instances" "asg_instances" {
     values = ["ASG_Instance"]
   }
 }
+
