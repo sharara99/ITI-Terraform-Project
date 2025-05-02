@@ -1,3 +1,0 @@
-[servers]
-ec2-user1 ansible_host=54.86.17.46 ansible_user=ec2-user ansible_ssh_private_key_file=./mykey.pem
-ec2-user2 ansible_host=54.197.211.128 ansible_user=ec2-user ansible_ssh_private_key_file=./mykey.pem
