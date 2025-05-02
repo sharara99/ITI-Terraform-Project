@@ -47,7 +47,7 @@ module "ec2_key_pair" {
 
 module "autoscaling" {
   source               = "./modules/autoscaling"
-  public_subnet_ids    = [module.vpc.public_subnet_1_id, module.vpc.public_subnet_1_id]
+  public_subnet_ids    = [module.vpc.public_subnet_1_id, module.vpc.public_subnet_2_id]
   alb_target_group_arn = module.load_balancer.target_group_arn
   ami                  = var.ami
   instance_type        = var.instance_type
