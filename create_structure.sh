@@ -15,7 +15,6 @@ declare -a DIRS=(
     "$ROOT_DIR/modules/rds"
     "$ROOT_DIR/modules/ssh_key"
     "$ROOT_DIR/modules/s3_backend"
-    "$ROOT_DIR/ansible"
 )
 
 # Define the files to be created
