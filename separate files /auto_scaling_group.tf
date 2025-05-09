@@ -1,5 +1,5 @@
 # This file contains the configuration for the Auto Scaling Group and Launch Configuration. 
-resource "aws_launch_configuration" "app" {
+resource "aws_launch_template" "app" {
   name_prefix                 = "app-"
   image_id                    = var.ami
   instance_type               = var.instance_type
